@@ -7,7 +7,11 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Flux;
 
+import java.util.List;
+
 public interface MessageRepository extends ReactiveCrudRepository<Message,Integer> {
     @Query(value="select * from T_messages  where uid=:uid")
     Flux<Message> listMessageByProducerId(@Param("uid") Integer uid);
+    @Query(value="select * from T_messages  where uid in (:uid)")
+    Flux<Message> listMessageByProducerIdIn(@Param("uid") List<Integer> uid);
 }

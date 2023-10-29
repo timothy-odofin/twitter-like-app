@@ -10,4 +10,5 @@ import java.util.List;
 
 public interface MessageService {
     Mono<ResponseEntity<ApiResponse<List<MessageResponse>>>> getUserMessages(Integer userId);
+    Mono<ResponseEntity<ApiResponse<List<MessageResponse>>>> getMessageBySubscriberId(Integer subscriberId);
 }
