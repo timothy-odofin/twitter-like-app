@@ -5,13 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetMessagesResponse {
-    private Integer responseCode;
-    private List<MessageResponse> messages;
+@Builder
+public class UserResponse {
+    private Integer uid;
+    private String uName;
 }

@@ -3,7 +3,6 @@ package odofin.oyejide.twitterlikeapp.config;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import odofin.oyejide.twitterlikeapp.service.UserManagementService;
-import odofin.oyejide.twitterlikeapp.utils.AppUtils;
 import odofin.oyejide.twitterlikeapp.utils.JsonUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -26,7 +25,7 @@ private final UserManagementService userManagementService;
         String token = exchange.getRequest().getHeaders().getFirst("api_key");
         String requestedEndpoint = exchange.getRequest().getURI().getPath();
 
-        if (requestedEndpoint.contains("login"))
+        if (requestedEndpoint.contains("login") ||requestedEndpoint.contains("webjars"))
             return chain.filter(exchange);
 
         return userManagementService.isTokenValid(token, requestedEndpoint)

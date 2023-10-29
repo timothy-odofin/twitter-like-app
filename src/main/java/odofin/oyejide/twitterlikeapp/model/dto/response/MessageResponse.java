@@ -6,13 +6,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ApiResponses {
-    private Integer code;
-    private Integer token;
-    private Integer status;
-    private String message;
-
+@Builder
+public class MessageResponse {
+    private String contents;
+    private Integer mid;
+    private UserResponse postedBy;
 }

@@ -1,12 +1,11 @@
 package odofin.oyejide.twitterlikeapp.utils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
 import odofin.oyejide.twitterlikeapp.model.dto.TokenDetails;
-import odofin.oyejide.twitterlikeapp.model.dto.response.exception.InvalidTokenException;
 
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Base64;
+import java.util.List;
+import java.util.UUID;
 
 public class AppUtils {
     public static String generateToken(Integer userId, String role) {
