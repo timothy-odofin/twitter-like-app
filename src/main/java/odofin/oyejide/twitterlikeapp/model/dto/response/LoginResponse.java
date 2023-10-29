@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LoginResponse {
     private Integer responseCode;
-    private Integer token;
+    private String token;
     private String responseMessage;
 
 }
