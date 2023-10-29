@@ -3,15 +3,15 @@ package odofin.oyejide.twitterlikeapp.exception;
 import lombok.extern.slf4j.Slf4j;
 import odofin.oyejide.twitterlikeapp.model.dto.response.ApiResponse;
 import odofin.oyejide.twitterlikeapp.model.dto.response.exception.BadRequestException;
-import odofin.oyejide.twitterlikeapp.model.dto.response.exception.RecordNotFounException;
 import odofin.oyejide.twitterlikeapp.model.dto.response.exception.InvalidTokenException;
+import odofin.oyejide.twitterlikeapp.model.dto.response.exception.RecordNotFounException;
 import odofin.oyejide.twitterlikeapp.model.dto.response.exception.UnAuthorizedException;
 import org.springframework.beans.PropertyAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import reactor.core.publisher.Mono;
 
@@ -25,9 +25,9 @@ import static odofin.oyejide.twitterlikeapp.utils.MessageUtil.*;
 @Slf4j
 public class GlobalReactiveErrorHandler{
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler(WebExchangeBindException.class)
     public Mono<ResponseEntity<ApiResponse<String>>> handleMethodArgumentNotValid(
-            MethodArgumentNotValidException exception) {
+            WebExchangeBindException exception) {
         List<String> errors = exception.getBindingResult().getFieldErrors().stream()
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
                 .collect(Collectors.toList());
@@ -47,6 +47,7 @@ public class GlobalReactiveErrorHandler{
     }
     @ExceptionHandler(SQLException.class)
     public Mono<ResponseEntity<ApiResponse<String>>> handleSqlException(SQLException exception) {
+        exception.printStackTrace();
         return exceptionMessage(exception, HttpStatus.INTERNAL_SERVER_ERROR.value(), INTERNAL_ERROR);
     }
 
@@ -57,7 +58,7 @@ public class GlobalReactiveErrorHandler{
 
     @ExceptionHandler(RecordNotFounException.class)
     public Mono<ResponseEntity<ApiResponse<String>>> handleRecordNotFounException(RecordNotFounException exception) {
-        return exceptionMessage(exception, HttpStatus.OK.value(), RECORD_NOT_FOUND);
+        return exceptionMessage(exception, HttpStatus.OK.value(), exception.getMessage());
     }
 
     @ExceptionHandler(BadRequestException.class)

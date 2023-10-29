@@ -14,7 +14,7 @@ public class PublishMessageController {
 
     @PostMapping("/message")
     @Operation(description = "Publishes User message")
-    public Mono<PublishMessageResponse> publishMessage(@RequestBody Mono<PublishMessageRequest> request) {
+    public Mono<PublishMessageResponse> publishMessage(@RequestBody PublishMessageRequest request) {
         return Mono.just(new PublishMessageResponse());
     }
 }
