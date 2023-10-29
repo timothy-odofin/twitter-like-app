@@ -4,10 +4,6 @@ server:
 spring:
   profiles:
     active: dev
-  liquibase:
-    enabled: false
-    r2dbc:
-      change-log: classpath:/db/changelog/release_1_0_0_changelog.yaml
   jpa:
     hibernate:
       ddl-auto: none

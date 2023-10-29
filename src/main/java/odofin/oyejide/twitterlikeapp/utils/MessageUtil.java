@@ -9,6 +9,7 @@ public class MessageUtil {
 
    public final static String DUPLICATE_SUBSCRIPTION="Subscription not successful, because you have previously subscribed to this producer";
    public final static String SUBSCRIPTION_NOT_ALLOW="Subscription not successful, you can only subscribe to a producer of message";
+   public final static String MESSAGE_PUBLISHED_SUCCESSFULLY="Great, message published successfully";
    public final static String SUCCESS="Success";
    public final static String FAIL="Fail";
 }
