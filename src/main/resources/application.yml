@@ -1,13 +1,13 @@
 server:
   port: 8080
-  servlet:
-    context-path: /api/v1
 
 spring:
   profiles:
     active: dev
   liquibase:
-    enabled: true
+    enabled: false
+    r2dbc:
+      change-log: classpath:/db/changelog/release_1_0_0_changelog.yaml
   jpa:
     hibernate:
       ddl-auto: none
@@ -23,3 +23,7 @@ spring:
   application:
     name: twitter-like-service
     version: 1.0
+  logging:
+    level:
+      root: INFO
+      twitter-like-service: DEBUG

@@ -1,18 +1,22 @@
 package odofin.oyejide.twitterlikeapp.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import odofin.oyejide.twitterlikeapp.model.dto.response.GetMessagesResponse;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 @RestController
-@Api(tags = "Fetch User Messages")
+@Tag(description = "Fetch User Messages", name = "USER")
 public class FetchUserMessagesController {
 
     @GetMapping("/getUserMessages/{userId}")
-    @ApiOperation(value = "Get all messages by User ID", notes = "Get all User Messages")
+    @Operation(description = "Get all messages by User ID", parameters = {
+            @Parameter(name = "userId", in = ParameterIn.PATH, required = true, description = "the id of the User")
+    })
     public Mono<GetMessagesResponse> getUserMessages(@PathVariable Long userId) {
-        return null;
+        return Mono.just(new GetMessagesResponse());
     }
 }

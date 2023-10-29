@@ -1,7 +1,7 @@
 package odofin.oyejide.twitterlikeapp.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import odofin.oyejide.twitterlikeapp.model.dto.request.Subscribe;
 import odofin.oyejide.twitterlikeapp.model.dto.response.SubscribeResponse;
 import org.springframework.web.bind.annotation.*;
@@ -9,12 +9,12 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/subscribe")
-@Api(tags = "Subscribe")
+@Tag(description = "Subscribe", name = "Subscription")
 public class SubscribeController {
 
     @PostMapping
-    @ApiOperation(value = "Subscribe to an account", notes = "Subscribes the user to an account of their choice")
+    @Operation(description = "Subscribe to an account")
     public Mono<SubscribeResponse> subscribe(@RequestBody Mono<Subscribe> request) {
-        return null;
+        return Mono.just(new SubscribeResponse());
     }
 }

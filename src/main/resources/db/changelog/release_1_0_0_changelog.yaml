@@ -1,5 +1,4 @@
 databaseChangeLog:
-  - logicalFilePath: ../db/changelog/twitter-like_changelog.yaml
   - changeSet:
       id: create_tables
       author: oyejide
