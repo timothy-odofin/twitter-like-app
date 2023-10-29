@@ -2,6 +2,7 @@ package odofin.oyejide.twitterlikeapp.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import odofin.oyejide.twitterlikeapp.model.dto.TokenDetails;
 import odofin.oyejide.twitterlikeapp.model.dto.request.LoginRequest;
 import odofin.oyejide.twitterlikeapp.model.dto.response.LoginResponse;
 import odofin.oyejide.twitterlikeapp.model.dto.response.exception.RecordNotFounException;
@@ -25,15 +26,19 @@ public class UserManagementServiceImpl implements UserManagementService {
     public Mono<ResponseEntity<LoginResponse>> login(LoginRequest request) {
         return userRepository.findByUNameAndUid(request.getUsername(), request.getId())
                 .flatMap(user -> {
-                    String token = AppUtils.generateToken(user.getUName(), user.getUid());
+                    String token = AppUtils.generateToken(user.getUid(), user.getURole());
                     LoginResponse loginResponse = new LoginResponse(HttpStatus.OK.value(), token, MessageUtil.LOGIN_SUCCESSFUL);
                     return Mono.just(ResponseEntity.ok(loginResponse));
                 })
                 .switchIfEmpty(Mono.error(new RecordNotFounException(MessageUtil.USER_NOT_FOUND)));
     }
-
     @Override
     public Mono<User> findById(Integer id) {
         return userRepository.findById(id).switchIfEmpty(Mono.error(new RecordNotFounException(MessageUtil.RECORD_NOT_FOUND)));
+    }
+
+    @Override
+    public Mono<TokenDetails> isTokenValid(String token, String currentEndpoint) {
+        return Mono.just(AppUtils.decodeToken(token, currentEndpoint));
     }
 }

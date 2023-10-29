@@ -4,7 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import odofin.oyejide.twitterlikeapp.model.dto.response.ApiResponse;
 import odofin.oyejide.twitterlikeapp.model.dto.response.exception.BadRequestException;
 import odofin.oyejide.twitterlikeapp.model.dto.response.exception.RecordNotFounException;
-import odofin.oyejide.twitterlikeapp.model.dto.response.exception.UserNotFoundException;
+import odofin.oyejide.twitterlikeapp.model.dto.response.exception.InvalidTokenException;
+import odofin.oyejide.twitterlikeapp.model.dto.response.exception.UnAuthorizedException;
 import org.springframework.beans.PropertyAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.server.WebExceptionHandler;
 import reactor.core.publisher.Mono;
 
 import java.sql.SQLException;
@@ -36,11 +36,15 @@ public class GlobalReactiveErrorHandler{
                 .body(new ApiResponse<>(FAIL, HttpStatus.BAD_REQUEST.value(), String.join(",", errors))));
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public Mono<ResponseEntity<ApiResponse<String>>> handleUserNotFoundException(UserNotFoundException exception) {
-        return exceptionMessage(exception, HttpStatus.NOT_FOUND.value(), exception.getMessage());
+    @ExceptionHandler(InvalidTokenException.class)
+    public Mono<ResponseEntity<ApiResponse<Object>>> handleUserNotFoundException(InvalidTokenException exception) {
+        return exceptionMessage(exception, HttpStatus.BAD_REQUEST.value(), exception);
     }
 
+    @ExceptionHandler(UnAuthorizedException.class)
+    public Mono<ResponseEntity<ApiResponse<Object>>> handlerUnAuthorizedException(UnAuthorizedException exception) {
+        return exceptionMessage(exception, HttpStatus.BAD_REQUEST.value(), exception.getResponse());
+    }
     @ExceptionHandler(SQLException.class)
     public Mono<ResponseEntity<ApiResponse<String>>> handleSqlException(SQLException exception) {
         return exceptionMessage(exception, HttpStatus.INTERNAL_SERVER_ERROR.value(), INTERNAL_ERROR);
@@ -53,7 +57,7 @@ public class GlobalReactiveErrorHandler{
 
     @ExceptionHandler(RecordNotFounException.class)
     public Mono<ResponseEntity<ApiResponse<String>>> handleRecordNotFounException(RecordNotFounException exception) {
-        return exceptionMessage(exception, HttpStatus.NOT_FOUND.value(), RECORD_NOT_FOUND);
+        return exceptionMessage(exception, HttpStatus.OK.value(), RECORD_NOT_FOUND);
     }
 
     @ExceptionHandler(BadRequestException.class)
@@ -78,7 +82,7 @@ public class GlobalReactiveErrorHandler{
         return exceptionMessage(exception, HttpStatus.INTERNAL_SERVER_ERROR.value(), INTERNAL_ERROR);
     }
 
-    private static Mono<ResponseEntity<ApiResponse<String>>> exceptionMessage(Exception exception, int statusCode, String errorMessage) {
+    private static <T> Mono<ResponseEntity<ApiResponse<T>>> exceptionMessage(Exception exception, int statusCode, T errorMessage) {
         log.warn("{} {} occurred", Exception.class.getSimpleName().toUpperCase(), exception.getMessage());
         return Mono.just(ResponseEntity.status(statusCode).body(new ApiResponse<>(FAIL, statusCode, errorMessage)));
     }
