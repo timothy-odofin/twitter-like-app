@@ -1,6 +1,7 @@
 package odofin.oyejide.twitterlikeapp.service;
 
 import odofin.oyejide.twitterlikeapp.model.dto.TokenDetails;
+import odofin.oyejide.twitterlikeapp.model.dto.request.AddUserRequest;
 import odofin.oyejide.twitterlikeapp.model.dto.request.LoginRequest;
 import odofin.oyejide.twitterlikeapp.model.dto.response.ApiResponse;
 import odofin.oyejide.twitterlikeapp.model.dto.response.LoginResponse;
@@ -15,6 +16,7 @@ import java.util.Map;
 
 public interface UserManagementService {
     Mono<ResponseEntity<ApiResponse<Map<String,String>>>> login(LoginRequest request);
+    Mono<ResponseEntity<ApiResponse<String>>> addUser(AddUserRequest request);
     Mono<User> findById(Integer id);
     Mono<TokenDetails> isTokenValid(String token, String currentEndpoint);
     Mono<ResponseEntity<ApiResponse<List<UserResponse>>>> listUserByRoles(String roleName);

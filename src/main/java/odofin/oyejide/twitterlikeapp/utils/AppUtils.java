@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class AppUtils {
+    public final static List<String> USER_ROLES = List.of("publisher", "subscriber");
     /**
      * Generates a token using the provided user ID and role.
      *

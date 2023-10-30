@@ -11,6 +11,7 @@ import odofin.oyejide.twitterlikeapp.service.MessageService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
@@ -25,7 +26,7 @@ private final MessageService messageService;
     @Operation(description = "Get all Messages by Subscriber ID",parameters = {
             @Parameter(name = "subscriberId", in = ParameterIn.PATH, required = true, description = "the id of the subscriber")
     })
-    public Mono<ResponseEntity<ApiResponse<List<MessageResponse>>>> getAllUserMessages(@PathVariable Integer subscriberId) {
+    public Mono<ResponseEntity<ApiResponse<List<MessageResponse>>>> getAllUserMessages(@PathVariable Integer subscriberId, @RequestHeader("api_key")String api_key) {
         return  messageService.getMessageBySubscriberId(subscriberId);
     }
 }

@@ -3,6 +3,7 @@ package odofin.oyejide.twitterlikeapp.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import odofin.oyejide.twitterlikeapp.model.dto.TokenDetails;
+import odofin.oyejide.twitterlikeapp.model.dto.request.AddUserRequest;
 import odofin.oyejide.twitterlikeapp.model.dto.request.LoginRequest;
 import odofin.oyejide.twitterlikeapp.model.dto.response.ApiResponse;
 import odofin.oyejide.twitterlikeapp.model.dto.response.LoginResponse;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +48,38 @@ public class UserManagementServiceImpl implements UserManagementService {
                 })
                 .switchIfEmpty(Mono.error(new RecordNotFounException(MessageUtil.USER_NOT_FOUND)));
     }
+
+    @Override
+    public Mono<ResponseEntity<ApiResponse<String>>> addUser(AddUserRequest request) {
+
+        String username = request.getUName();
+        return userRepository.findByUsername(username)
+                .flatMap(existingUser -> {
+                    // User with the same username already exists, return a response indicating duplicate user
+                    ApiResponse<String> response = new ApiResponse<>(MessageUtil.FAIL,
+                            HttpStatus.CONFLICT.value(),
+                            MessageUtil.DUPLICATE_USER
+                    );
+                    return Mono.just(ResponseEntity.status(HttpStatus.OK).body(response));
+                })
+                .switchIfEmpty(saveNewUser(request));
+    }
+
+    private Mono<ResponseEntity<ApiResponse<String>>> saveNewUser(AddUserRequest request) {
+        return userRepository.save(User.builder()
+                        .uRole(request.getURole())
+                        .uName(request.getUName())
+                        .build())
+                .flatMap(savedUser -> {
+                    return Mono.just(ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>(
+                            MessageUtil.SUCCESS,
+                            HttpStatus.CREATED.value(),
+                            MessageUtil.USER_ADDED
+                    )));
+                });
+
+    }
+
 
     /**
      * Retrieves a user by their ID and returns it as a Mono<User>.
