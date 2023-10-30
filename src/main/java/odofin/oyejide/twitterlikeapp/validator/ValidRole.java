@@ -10,7 +10,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface ValidRole {
 
-    String message() default "Invalid role. Allowed values are {Publisher, Subscriber}";
+    String message() default "Invalid role. Allowed values are {Producer, Subscriber}";
 
     Class<?>[] groups() default {};
 
