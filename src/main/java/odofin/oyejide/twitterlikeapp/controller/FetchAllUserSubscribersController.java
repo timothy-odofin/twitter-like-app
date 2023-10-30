@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import odofin.oyejide.twitterlikeapp.model.dto.response.ApiResponse;
-import odofin.oyejide.twitterlikeapp.model.dto.response.GetMessagesResponse;
 import odofin.oyejide.twitterlikeapp.model.dto.response.MessageResponse;
 import odofin.oyejide.twitterlikeapp.service.MessageService;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +22,7 @@ import java.util.List;
 public class FetchAllUserSubscribersController {
 private final MessageService messageService;
     @GetMapping("/getAllUserMessages/{subscriberId}")
-    @Operation(description = "Get all Subscribers by Subscriber ID",parameters = {
+    @Operation(description = "Get all Messages by Subscriber ID",parameters = {
             @Parameter(name = "subscriberId", in = ParameterIn.PATH, required = true, description = "the id of the subscriber")
     })
     public Mono<ResponseEntity<ApiResponse<List<MessageResponse>>>> getAllUserMessages(@PathVariable Integer subscriberId) {

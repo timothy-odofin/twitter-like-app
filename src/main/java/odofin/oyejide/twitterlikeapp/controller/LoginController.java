@@ -21,7 +21,7 @@ import java.util.Map;
 public class LoginController {
 private final UserManagementService userManagementService;
     @PostMapping
-    @Operation(description = "Login to account")
+    @Operation(description = "Login to the account")
     Mono<ResponseEntity<ApiResponse<Map<String,String>>>> login(@Valid @RequestBody LoginRequest request) {
        return userManagementService.login(request);
     }

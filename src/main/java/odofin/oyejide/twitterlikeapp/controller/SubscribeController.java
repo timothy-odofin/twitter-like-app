@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import odofin.oyejide.twitterlikeapp.model.dto.request.Subscribe;
 import odofin.oyejide.twitterlikeapp.model.dto.response.ApiResponse;
-import odofin.oyejide.twitterlikeapp.model.dto.response.SubscribeResponse;
 import odofin.oyejide.twitterlikeapp.service.SubscriptionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

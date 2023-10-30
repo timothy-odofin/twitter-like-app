@@ -32,6 +32,14 @@ public class MessageServiceImpl implements MessageService {
         return userRepository.findById(userId)
                 .switchIfEmpty(Mono.error(new RecordNotFounException("User with ID " + userId + " not found")));
     }
+    /**
+     * Processes a Flux of messages to create a list of MessageResponses.
+     * Each message is mapped to a UserResponse and then used to build a MessageResponse.
+     * The list of MessageResponses is wrapped in a ResponseEntity with appropriate status and message.
+     *
+     * @param messageFlux A Flux of Message objects.
+     * @return A Mono of ResponseEntity containing a list of MessageResponses.
+     */
     private Mono<ResponseEntity<ApiResponse<List<MessageResponse>>>> producerOutcome(Flux<Message> messageFlux){
         return messageFlux.flatMap(message -> {
                     Mono<UserResponse> userResponseMono = userRepository.findById(message.getUid())
@@ -47,15 +55,28 @@ public class MessageServiceImpl implements MessageService {
                 })
                 .collectList()
                 .map(userResponses -> ResponseEntity.ok(new ApiResponse<>(MessageUtil.SUCCESS, HttpStatus.OK.value(), userResponses)));
-
     }
+
+    /**
+     * Retrieves messages associated with a specific user ID after validating its existence.
+     * This method combines the validation and message retrieval steps.
+     *
+     * @param userId The ID of the user to retrieve messages for.
+     * @return A Mono of ResponseEntity containing a list of MessageResponses.
+     */
     @Override
     public Mono<ResponseEntity<ApiResponse<List<MessageResponse>>>> getUserMessages(Integer userId) {
         return validateUserExists(userId)
                 .then(producerOutcome(messageRepository.listMessageByProducerId(userId)));
     }
 
-
+    /**
+     * Retrieves messages associated with a subscriber after validating the user's existence.
+     * This method combines the validation and message retrieval steps.
+     *
+     * @param userId The ID of the subscriber to retrieve messages for.
+     * @return A Mono of ResponseEntity containing a list of MessageResponses.
+     */
     @Override
     public Mono<ResponseEntity<ApiResponse<List<MessageResponse>>>> getMessageBySubscriberId(Integer userId) {
         return validateUserExists(userId).then(subscriberProducerRepository.listProducerBySubscriber(userId)
@@ -63,16 +84,22 @@ public class MessageServiceImpl implements MessageService {
                 .flatMap(producerIds -> producerOutcome(messageRepository.listMessageByProducerIdIn(producerIds))));
     }
 
+    /**
+     * Publishes a message for a specific user after validating the user's existence.
+     *
+     * @param request The PublishMessageRequest containing user ID and message content.
+     * @return A Mono of ResponseEntity containing a success message.
+     */
     @Override
     public Mono<ResponseEntity<ApiResponse<String>>> publishMessage(PublishMessageRequest request) {
         Integer userId = request.getUserId();
         String contents = request.getMessage();
         return validateUserExists(userId)
                 .flatMap(user -> messageRepository.save(Message.builder()
-                                .contents(contents)
-                                .uid(userId)
+                        .contents(contents)
+                        .uid(userId)
                         .build()))
                 .thenReturn(ResponseEntity.ok(new ApiResponse<>(MessageUtil.SUCCESS, HttpStatus.OK.value(), MessageUtil.MESSAGE_PUBLISHED_SUCCESSFULLY)));
-
     }
+
 }
