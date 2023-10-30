@@ -20,7 +20,7 @@ public class SubscribeController {
 private final SubscriptionService subscriptionService;
     @PostMapping
     @Operation(description = "Subscribe to an account")
-    public Mono<ResponseEntity<ApiResponse<String>>> subscribe(@Valid @RequestBody Subscribe request) {
+    public Mono<ResponseEntity<ApiResponse<String>>> subscribe(@Valid @RequestBody Subscribe request, @RequestHeader("api_key")String api_key) {
       return subscriptionService.subscribe(request);
     }
 }

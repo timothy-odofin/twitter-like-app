@@ -13,4 +13,6 @@ public interface UserRepository extends ReactiveCrudRepository<User,Integer> {
     Mono<User> findByUNameAndUid(@Param("uName") String uName, @Param("uid") Integer uid);
     @Query(value="select * from T_users  where u_role=:u_role")
     Flux<User> listUserByRoles(@Param("u_role") String u_role);
+    @Query(value="select * from T_users  where u_name=:uName")
+    Mono<User> findByUsername(@Param("uName") String uName);
 }

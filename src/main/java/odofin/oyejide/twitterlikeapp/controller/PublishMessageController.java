@@ -20,7 +20,7 @@ public class PublishMessageController {
 private final MessageService messageService;
     @PostMapping("/message")
     @Operation(description = "Publishes User message")
-    public Mono<ResponseEntity<ApiResponse<String>>> publishMessage(@Valid @RequestBody PublishMessageRequest request) {
+    public Mono<ResponseEntity<ApiResponse<String>>> publishMessage(@Valid @RequestBody PublishMessageRequest request, @RequestHeader("api_key")String api_key) {
         return messageService.publishMessage(request);
     }
 }
